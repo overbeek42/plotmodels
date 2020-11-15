@@ -4,13 +4,13 @@ plot_models <- function(models, coefs = NULL, coeflabels, modellabels) {
     
     mname <- deparse(substitute(m))
     
-   return(rbind(data.table(stat = "coef",
-                     model = mname,
-                     t(m$coefficients)),
-          data.table(stat = "sd",
-                     model = mname,
-                     t(sqrt(diag(vcov(m))))), fill = T, use.names = T))
-    }), fill = T, use.names = T)
+    return(rbind(data.table(stat = "coef",
+                            model = mname,
+                            t(coefficients(m))),
+                 data.table(stat = "sd",
+                            model = mname,
+                            t(sqrt(diag(vcov(m))))), fill = T, use.names = T))
+  }), fill = T, use.names = T)
   
   plot_data_long <- dcast(melt(plot_data_wide, id.vars = c("model", "stat")), model + variable ~ stat)
   
@@ -27,7 +27,7 @@ plot_models <- function(models, coefs = NULL, coeflabels, modellabels) {
   plot_limits <- ifelse(c(limit_min < 0, limit_max < 0), c(limit_min, 0),
                         ifelse(c(limit_min > 0, limit_max > 0), c(0, limit_max),
                                c(limit_min, limit_max)))
-
+  
   # dodge the posotion of the points to be plotted
   dodge <- position_dodge(width=0.5)
   
@@ -41,5 +41,5 @@ plot_models <- function(models, coefs = NULL, coeflabels, modellabels) {
     scale_color_viridis_d(breaks = modelnames, labels = modellabels) +
     labs(x = NULL, color = NULL, y = "estimate") +
     scale_x_discrete(breaks = coefs, labels = coeflabels)
-    
+  
 }
