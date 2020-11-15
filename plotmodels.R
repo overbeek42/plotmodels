@@ -2,7 +2,7 @@ plot_models <- function(modelnames, coefs = NULL, coeflabels, modellabels) {
   
   plot_data_wide <- rbindlist(lapply(modelnames, function(m) {
     
-    model <- get(m, envir = .GlobalEnv)
+    model <- get(m)
     
     return(rbind(data.table(stat = "coef",
                             model = m,
