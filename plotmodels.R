@@ -9,12 +9,12 @@ plot_models <- function(models, coefs = NULL, coeflabels, modellabels) {
                             t(coefficients(m))),
                  data.table(stat = "sd",
                             model = mname,
-                            t(sqrt(diag(vcov(m))))), fill = T, use.names = T))
+                            t(sqrt(diag(vcov(m)))))))
   }), fill = T, use.names = T)
   
   plot_data_long <- dcast(melt(plot_data_wide, id.vars = c("model", "stat")), model + variable ~ stat)
   
-  if (is.null(coefs)) coefs <- plot_models$coef
+  if (is.null(coefs)) coefs <- plot_data_long$coef
   
   # keep only data to be plotted
   plot_data <- plot_data_long[ variable %in% coefs]
@@ -38,7 +38,7 @@ plot_models <- function(models, coefs = NULL, coeflabels, modellabels) {
     geom_hline(aes(yintercept = 0), color = "darkgrey", size = 1.5) +
     coord_flip(ylim = plot_limits) +
     theme(legend.position = "top") +
-    scale_color_viridis_d(breaks = modelnames, labels = modellabels) +
+    scale_color_viridis_d(breaks = models, labels = modellabels) +
     labs(x = NULL, color = NULL, y = "estimate") +
     scale_x_discrete(breaks = coefs, labels = coeflabels)
   
