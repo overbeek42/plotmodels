@@ -1,13 +1,15 @@
-plot_models <- function(modelnames, coefs = NULL, coeflabels, modellabels) {
+plot_models <- function(models, coefs = NULL, coeflabels, modellabels) {
   
   plot_data_wide <- rbindlist(lapply(modelnames, function(m) {
     
+    mname <- deparse(substitute(m))
+    
    return(rbind(data.table(stat = "coef",
-                     model = m,
-                     t(get(m)$coefficients)),
+                     model = mname,
+                     t(m$coefficients)),
           data.table(stat = "sd",
-                     model = m,
-                     t(sqrt(diag(vcov(get(m)))))), fill = T, use.names = T))
+                     model = mname,
+                     t(sqrt(diag(vcov(m))))), fill = T, use.names = T))
     }), fill = T, use.names = T)
   
   plot_data_long <- dcast(melt(plot_data_wide, id.vars = c("model", "stat")), model + variable ~ stat)
