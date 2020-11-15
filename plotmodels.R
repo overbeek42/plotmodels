@@ -1,7 +1,8 @@
-plot_models <- function(models, coefs = NULL, coeflabels, modellabels) {
+plot_models <- function(modelnames, coefs = NULL, coeflabels, modellabels) {
   
   plot_data_wide <- rbindlist(lapply(models, function(m) {
     
+<<<<<<< HEAD
     mname <- deparse(substitute(m))
     
     return(rbind(data.table(stat = "coef",
@@ -11,6 +12,15 @@ plot_models <- function(models, coefs = NULL, coeflabels, modellabels) {
                             model = mname,
                             t(sqrt(diag(vcov(m)))))))
   }), fill = T, use.names = T)
+=======
+   return(rbind(data.table(stat = "coef",
+                     model = m,
+                     t(get(m)$coefficients)),
+          data.table(stat = "sd",
+                     model = m,
+                     t(sqrt(diag(vcov(get(m)))))), fill = T, use.names = T))
+    }), fill = T, use.names = T)
+>>>>>>> parent of 76ec628... Update plotmodels.R
   
   plot_data_long <- dcast(melt(plot_data_wide, id.vars = c("model", "stat")), model + variable ~ stat)
   
