@@ -1,6 +1,6 @@
 plot_models <- function(models, coefs = NULL, coeflabels, modellabels) {
   
-  plot_data_wide <- rbindlist(lapply(modelnames, function(m) {
+  plot_data_wide <- rbindlist(lapply(models, function(m) {
     
     mname <- deparse(substitute(m))
     
