@@ -2,14 +2,16 @@ plot_models <- function(modelnames, coefs = NULL, coeflabels, modellabels) {
   
   plot_data_wide <- rbindlist(lapply(modelnames, function(m) {
     
-   return(rbind(data.table(stat = "coef",
-                     model = m,
-                     t(get(m)$coefficients)),
-          data.table(stat = "sd",
-                     model = m,
-                     t(sqrt(diag(vcov(get(m))))))))
-    }), fill = T, use.names = T)
-
+    model <- get(m, envir = .GlobalEnv)
+    
+    return(rbind(data.table(stat = "coef",
+                            model = m,
+                            t(coefficients(model))),
+                 data.table(stat = "sd",
+                            model = m,
+                            t(sqrt(diag(vcov(model)))))))
+  }), fill = T, use.names = T)
+  
   plot_data_long <- dcast(melt(plot_data_wide, id.vars = c("model", "stat")), model + variable ~ stat)
   
   if (is.null(coefs)) coefs <- plot_data_long$coef
@@ -25,7 +27,7 @@ plot_models <- function(modelnames, coefs = NULL, coeflabels, modellabels) {
   plot_limits <- ifelse(c(limit_min < 0, limit_max < 0), c(limit_min, 0),
                         ifelse(c(limit_min > 0, limit_max > 0), c(0, limit_max),
                                c(limit_min, limit_max)))
-
+  
   # dodge the posotion of the points to be plotted
   dodge <- position_dodge(width=0.5)
   
@@ -39,5 +41,5 @@ plot_models <- function(modelnames, coefs = NULL, coeflabels, modellabels) {
     scale_color_viridis_d(breaks = modelnames, labels = modellabels) +
     labs(x = NULL, color = NULL, y = "estimate") +
     scale_x_discrete(breaks = coefs, labels = coeflabels)
-    
+  
 }
