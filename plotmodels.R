@@ -4,12 +4,18 @@ plot_models <- function(modelnames, coefs = NULL, coeflabels, modellabels) {
     
     model <- get(m)
     
+    if(model$vcm) {
+      vcm <- model$vcm
+    } else {
+      vcm <- sqrt(diag(vcov(model)))
+    }
+    
     return(rbind(data.table(stat = "coef",
                             model = m,
                             t(coefficients(model))),
                  data.table(stat = "sd",
                             model = m,
-                            t(sqrt(diag(vcov(model)))))))
+                            t(vcm))))
   }), fill = T, use.names = T)
   
   plot_data_long <- dcast(melt(plot_data_wide, id.vars = c("model", "stat")), model + variable ~ stat)
