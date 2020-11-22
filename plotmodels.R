@@ -2,10 +2,10 @@ plot_models <- function(modelnames, coefs = NULL, coeflabels, modellabels) {
   
   plot_data_wide <- rbindlist(lapply(modelnames, function(m) {
     
-    model <- get(m)
+    model <- get(m, parent.frame())
     
-    if(model$vcm) {
-      vcm <- model$vcm
+    if(exists(paste0(m,"_vcm"))) {
+      vcm <- diag(get(paste0(m, "_vcm")))
     } else {
       vcm <- sqrt(diag(vcov(model)))
     }
