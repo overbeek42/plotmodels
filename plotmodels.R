@@ -5,7 +5,7 @@ plot_models <- function(modelnames, coefs = NULL, coeflabels, modellabels) {
     model <- get(m, parent.frame())
     
     if(exists(paste0(m,"_vcm"))) {
-      vcm <- diag(get(paste0(m, "_vcm")))
+      vcm <- sqrt(diag(get(paste0(m, "_vcm"))))
     } else {
       vcm <- sqrt(diag(vcov(model)))
     }
