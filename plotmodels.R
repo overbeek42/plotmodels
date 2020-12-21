@@ -1,4 +1,4 @@
-plot_models <- function(modelnames, coefs = NULL, coeflabels, modellabels) {
+plot_models <- function(modelnames, senames, coefs = NULL, coeflabels, modellabels) {
   
   plot_data_wide <- rbindlist(lapply(modelnames, function(m) {
     
