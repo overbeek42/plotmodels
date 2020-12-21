@@ -1,14 +1,10 @@
 plot_models <- function(modelnames, senames, coefs = NULL, coeflabels, modellabels) {
   
-  plot_data_wide <- rbindlist(lapply(modelnames, function(m) {
+  plot_data_wide <- rbindlist(mapply(function(m, s) {
     
     model <- get(m, parent.frame())
     
-    if(exists(paste0(m,"_vcm"))) {
-      vcm <- sqrt(diag(get(paste0(m, "_vcm"))))
-    } else {
-      vcm <- sqrt(diag(vcov(model)))
-    }
+    vcm <- get(s)
     
     return(rbind(data.table(stat = "coef",
                             model = m,
@@ -16,7 +12,9 @@ plot_models <- function(modelnames, senames, coefs = NULL, coeflabels, modellabe
                  data.table(stat = "sd",
                             model = m,
                             t(vcm))))
-  }), fill = T, use.names = T)
+  },
+  modelnames, senames),
+  fill = T, use.names = T)
   
   plot_data_long <- dcast(melt(plot_data_wide, id.vars = c("model", "stat")), model + variable ~ stat)
   
