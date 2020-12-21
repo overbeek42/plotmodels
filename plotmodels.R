@@ -2,7 +2,7 @@ plot_models <- function(modelnames = NULL, senames = NULL, coefs = NULL, coeflab
   
   plot_data_wide <- rbindlist(mapply(function(m, s) {
     
-    model <- get(m, parent.frame())
+    model <- get(m)
     
     vcm <- get(s)
     
